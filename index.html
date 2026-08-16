@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>मेरो पसल</title>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   ⚙️ यहाँ मात्र फेर्नुहोस्
+   Google Apps Script deploy गरेपछि पाएको URL तल टाँस्नुहोस्
+   ═══════════════════════════════════════════════════════ */
+const API_URL = "यहाँ_तपाईंको_APPS_SCRIPT_URL_टाँस्नुहोस्";
+/* ═══════════════════════════════════════════════════════ */
+</script>
+
+<style>
+  :root { --green:#146356; --gold:#E8A013; --red:#E8140C; --ink:#1F2320; --line:#E5E2DA; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { overflow-x:hidden; }
+  body { font-family:"Mukta",system-ui,sans-serif; background:#fff; color:var(--ink); }
+  button { font:inherit; cursor:pointer; touch-action:manipulation; }
+  input, textarea { font:inherit; font-size:16px; outline:none; }
+  img { max-width:100%; user-select:none; }
+  .wrap { max-width:760px; margin:0 auto; padding-bottom:60px; }
+  .announce { background:#111214; color:#fff; text-align:center; font-size:13px; font-weight:600; padding:8px 12px; }
+  header.shop { padding:18px 16px 14px; border-bottom:1px solid #f0efe9; }
+  header.shop h1 { color:var(--green); font-size:26px; font-weight:800; }
+  header.shop p { color:#777; font-size:13px; }
+  .badges { display:flex; gap:8px; flex-wrap:wrap; padding:14px 16px 4px; }
+  .badges span { font-size:11px; font-weight:700; background:#f7f6f1; border:1px solid #e8e6de; border-radius:99px; padding:5px 11px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:12px 16px; }
+  @media(min-width:640px){ .grid { grid-template-columns:1fr 1fr 1fr; } }
+  .card { text-align:left; background:#fff; border:1px solid var(--line); border-radius:18px; overflow:hidden; position:relative; transition:.15s; }
+  .card:active { transform:scale(.98); }
+  .card .img { height:170px; width:100%; object-fit:cover; background:linear-gradient(135deg,#E7F1EC,#F9EFD8); display:flex; align-items:center; justify-content:center; font-size:44px; }
+  .card .pct { position:absolute; top:8px; left:8px; background:var(--red); color:#fff; font-size:11px; font-weight:800; border-radius:99px; padding:2px 8px; }
+  .card .body { padding:10px 12px 12px; }
+  .card .name { font-weight:700; font-size:14px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .card .price { color:var(--green); font-weight:800; margin-top:3px; }
+  .card .old { color:#aaa; font-size:12px; text-decoration:line-through; margin-left:5px; font-weight:600; }
+  .card .stars { color:var(--gold); font-size:11px; font-weight:800; margin-top:2px; }
+  .card .cta { margin-top:8px; background:var(--green); color:#fff; text-align:center; border-radius:10px; padding:7px; font-size:13px; font-weight:800; }
+  footer { text-align:center; color:#bbb; font-size:11px; padding:40px 16px 20px; }
+
+  /* प्रोडक्ट पेज */
+  .pp { padding:14px 16px 120px; max-width:560px; margin:0 auto; }
+  .back { color:var(--green); font-weight:700; background:none; border:0; font-size:14px; }
+  .gal-main { height:320px; width:100%; object-fit:cover; border-radius:18px; background:linear-gradient(135deg,#E7F1EC,#F9EFD8); display:flex; align-items:center; justify-content:center; font-size:64px; margin-top:10px; }
+  .thumbs { display:flex; gap:8px; margin-top:8px; overflow-x:auto; }
+  .thumbs img { height:60px; width:60px; object-fit:cover; border-radius:12px; border:2px solid var(--line); flex-shrink:0; }
+  .thumbs img.on { border-color:var(--green); }
+  .pp h1 { font-size:22px; font-weight:800; margin-top:14px; line-height:1.3; }
+  .pp .price { color:var(--green); font-size:22px; font-weight:800; }
+  .pp .old { color:#aaa; text-decoration:line-through; margin-left:7px; font-size:15px; }
+  .pp .stars { color:var(--gold); font-weight:700; font-size:14px; margin-top:3px; }
+  .qty { display:flex; align-items:center; gap:10px; margin-top:16px; }
+  .qty .box { display:flex; align-items:center; border:1px solid #d5d2c8; border-radius:12px; background:#fff; }
+  .qty button { background:none; border:0; font-size:20px; font-weight:700; color:#888; padding:8px 16px; }
+  .qty b { padding:0 6px; }
+  .ordernow { margin-top:14px; width:100%; background:var(--red); color:#fff; border:0; border-radius:14px; font-weight:800; font-size:17px; padding:16px; }
+  .ordernow:active { transform:scale(.98); }
+  .desc { margin-top:20px; color:#444; line-height:1.7; }
+  .desc h3 { font-size:17px; font-weight:800; color:var(--ink); margin-top:16px; }
+  .desc h2 { font-size:20px; font-weight:800; color:var(--ink); margin-top:18px; }
+  .desc ul { list-style:none; margin:8px 0; }
+  .desc li { display:flex; gap:8px; }
+  .desc li::before { content:"✔"; color:var(--green); font-weight:800; }
+  .desc img { border-radius:16px; margin:10px 0; width:100%; }
+  .rev { background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px; display:flex; gap:10px; margin-bottom:10px; }
+  .rev .av { height:42px; width:42px; border-radius:50%; object-fit:cover; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; }
+  .rev .st { color:var(--gold); font-size:13px; }
+  .stickybar { position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--line); padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 10px); display:flex; align-items:center; gap:12px; }
+  .stickybar .tot { flex:1; }
+  .stickybar .tot small { color:#888; font-size:11px; display:block; }
+  .stickybar .tot b { color:var(--green); font-size:17px; }
+  .stickybar button { background:var(--red); color:#fff; border:0; border-radius:12px; font-weight:800; padding:12px 18px; }
+
+  /* पप-अप COD फारम */
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:flex-end; justify-content:center; z-index:50; }
+  @media(min-width:640px){ .overlay { align-items:center; padding:20px; } }
+  .modal { background:#fff; width:100%; max-width:430px; border-radius:22px 22px 0 0; padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 16px); max-height:92vh; overflow-y:auto; }
+  @supports (height:100dvh){ .modal { max-height:92dvh; } }
+  @media(min-width:640px){ .modal { border-radius:22px; } }
+  .modal .head { display:flex; justify-content:space-between; align-items:flex-start; }
+  .modal .head .t { color:var(--green); font-weight:800; font-size:17px; }
+  .modal .head .s { color:#888; font-size:11px; }
+  .modal .x { background:none; border:0; font-size:24px; color:#aaa; padding:4px 8px; }
+  .offer { position:relative; width:100%; display:flex; align-items:center; gap:10px; border:2px solid var(--line); border-radius:14px; padding:10px 12px; background:#fff; text-align:left; margin-top:10px; transition:.15s; }
+  .offer.on { border-color:var(--gold); background:#FBF3DC; animation:blink .55s ease-out; }
+  @keyframes blink { 0%{box-shadow:0 0 0 0 rgba(232,160,19,.7);} 50%{box-shadow:0 0 0 8px rgba(232,160,19,.15);} 100%{box-shadow:0 0 0 0 rgba(232,160,19,0);} }
+  .offer .chk { display:none; position:absolute; top:-8px; right:-8px; height:24px; width:24px; background:var(--gold); border:2px solid #fff; border-radius:50%; color:#fff; font-weight:800; font-size:13px; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,.2); animation:pop .3s ease-out; }
+  @keyframes pop { 0%{transform:scale(0);} 70%{transform:scale(1.25);} 100%{transform:scale(1);} }
+  .offer.on .chk { display:flex; }
+  .offer img.th { height:44px; width:44px; border-radius:10px; object-fit:cover; flex-shrink:0; }
+  .offer .tt { font-weight:700; font-size:14px; }
+  .offer .tag { display:inline-block; color:#fff; font-size:10px; font-weight:800; border-radius:6px; padding:2px 7px; margin-top:2px; }
+  .offer .lbl { position:absolute; top:-9px; left:12px; background:#111214; color:#fff; font-size:9px; font-weight:800; border-radius:99px; padding:2px 8px; }
+  .offer .pr { margin-left:auto; text-align:right; flex-shrink:0; }
+  .offer .pr .old { display:block; font-size:11px; color:#aaa; text-decoration:line-through; }
+  .offer .pr b { font-size:15px; }
+  .fld { margin-top:11px; }
+  .fld label { font-size:13px; font-weight:700; color:#555; display:block; margin-bottom:4px; }
+  .fld label b { color:var(--red); }
+  .fld input, .fld textarea { width:100%; border:1.5px solid #d5d2c8; border-radius:12px; padding:11px 12px; background:#fff; }
+  .fld input:focus, .fld textarea:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(20,99,86,.13); }
+  .ship { width:100%; display:flex; align-items:center; gap:10px; border:2px solid var(--line); border-radius:13px; padding:10px 12px; background:#fff; text-align:left; margin-top:8px; }
+  .ship.on { border-color:var(--green); background:#E8F5EE; }
+  .ship .dot { height:15px; width:15px; border-radius:50%; border:2px solid #c9c5bb; flex-shrink:0; }
+  .ship.on .dot { border-color:var(--green); background:var(--green); box-shadow:inset 0 0 0 3px #fff; }
+  .ship .l { font-weight:600; font-size:13px; }
+  .ship .n { color:var(--green); font-size:11px; font-weight:700; }
+  .ship .c { margin-left:auto; font-weight:800; font-size:13px; }
+  .sum { background:#F1F6F3; border-radius:13px; padding:11px 13px; font-size:13.5px; margin-top:14px; }
+  .sum .r { display:flex; justify-content:space-between; padding:2.5px 0; }
+  .sum .tot { border-top:1px solid #cfd8d2; margin-top:5px; padding-top:7px; font-weight:800; font-size:15px; }
+  .sum .tot span:last-child { color:var(--green); }
+  .err { color:var(--red); font-weight:700; font-size:13px; margin-top:10px; display:none; }
+  .submit { margin-top:14px; width:100%; background:var(--gold); color:#231a02; border:0; border-radius:13px; font-weight:800; font-size:16px; padding:15px; }
+  .codnote { text-align:center; color:#999; font-size:11px; margin-top:8px; }
+  .success { text-align:center; padding:34px 8px; }
+  .success .e { font-size:54px; }
+  .success h2 { color:var(--green); margin:8px 0 2px; }
+  .success p { color:#666; font-size:14px; margin-top:4px; }
+  #loading { text-align:center; padding:80px 20px; color:var(--green); font-weight:700; }
+</style>
+</head>
+<body>
+
+<div id="loading">पसल खुल्दैछ…</div>
+<div id="app" style="display:none"></div>
+
+<script>
+let DATA = { config:{}, products:[], offers:[], shipping:[], reviews:[] };
+let view = { page:"home", productId:null };
+let sel = { offerIdx:0, shipIdx:0, qty:1, showForm:false };
+
+const fmt = n => "Rs. " + Number(n||0).toLocaleString("en-IN");
+const cfg = k => (DATA.config[k] !== undefined ? String(DATA.config[k]) : "");
+const el = id => document.getElementById(id);
+
+/* ---------- Meta Pixel ---------- */
+function loadPixel(id){
+  if(!id || window.fbq) return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+  (window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+  fbq("init", id); fbq("track","PageView");
+}
+const track = (ev,d) => { try { if(window.fbq) fbq("track",ev,d); } catch(e){} };
+
+/* ---------- डाटा ---------- */
+async function load(){
+  try {
+    const res = await fetch(API_URL);
+    DATA = await res.json();
+  } catch(e){
+    el("loading").textContent = "डाटा लोड हुन सकेन — index.html को API_URL ठीक छ कि जाँच्नुहोस्।";
+    return;
+  }
+  if(cfg("pixelId")) loadPixel(cfg("pixelId"));
+  el("loading").style.display = "none";
+  el("app").style.display = "block";
+  render();
+}
+
+/* ---------- अफर/हिसाब ---------- */
+function productOffers(p){
+  const all = (DATA.offers||[]).filter(o => {
+    const ids = String(o.products||"").trim();
+    return !ids || ids.split(",").map(x=>x.trim()).includes(String(p.id));
+  });
+  const unit = Number(p.price)||0;
+  const list = (all.length?all:[{qty:1,title:"1 Unit",discountType:"none",discountValue:0}]).map(o=>{
+    const q = Number(o.qty)||1, base = unit*q;
+    let price = base;
+    const dv = Number(o.discountValue)||0;
+    if(String(o.discountType)==="percent") price = Math.max(0, Math.round(base*(1-dv/100)));
+    else if(String(o.discountType)==="fixed") price = Math.max(0, base-dv);
+    const save = base-price;
+    return { qty:q, title:o.title||q+" Unit", price, base,
+      tag: o.tag || (save>0 ? "Save Rs "+save.toLocaleString("en-IN")+"/-" : "Save 0%"),
+      tagColor: o.tagColor||"#1F2320", topLabel:o.topLabel||"",
+      preselect: String(o.preselect).toLowerCase()==="yes" };
+  });
+  return list;
+}
+function calc(p){
+  const offers = productOffers(p);
+  const o = offers[Math.min(sel.offerIdx, offers.length-1)];
+  const base = o.price * sel.qty;
+  const ships = DATA.shipping||[];
+  let delivery = 0, shipLabel = "";
+  if(ships.length){
+    const s = ships[Math.min(sel.shipIdx, ships.length-1)];
+    delivery = Number(s.charge)||0; shipLabel = s.label||"";
+  }
+  return { offers, o, base, delivery, shipLabel, total: base+delivery };
+}
+
+/* ---------- रेन्डर ---------- */
+function render(){
+  const app = el("app");
+  if(view.page==="home") app.innerHTML = homeHTML();
+  else if(view.page==="product") app.innerHTML = productHTML();
+  else if(view.page==="success") app.innerHTML = successHTML();
+  window.scrollTo(0,0);
+}
+
+function starLine(pid){
+  const rs = (DATA.reviews||[]).filter(r=>String(r.productId)===String(pid));
+  if(!rs.length) return {html:"", avg:0, n:0};
+  const avg = rs.reduce((s,r)=>s+(Number(r.stars)||5),0)/rs.length;
+  return { html:`★ ${avg.toFixed(1)} <span style="color:#bbb">(${rs.length})</span>`, avg, n:rs.length, list:rs };
+}
+
+function homeHTML(){
+  const ann = cfg("announcement");
+  return `<div class="wrap">
+    ${ann?`<div class="announce">${ann}</div>`:""}
+    <header class="shop">
+      <h1>${cfg("shopName")||"मेरो पसल"}</h1>
+      <p>${cfg("tagline")||"घरमै डेलिभरी • Cash on Delivery"}</p>
+    </header>
+    <div class="badges"><span>💵 Cash on Delivery</span><span>🚚 छिटो डेलिभरी</span><span>✅ Sign-up चाहिँदैन</span></div>
+    <div class="grid">
+      ${(DATA.products||[]).map(p=>{
+        const imgs = String(p.images||"").split(",").map(s=>s.trim()).filter(Boolean);
+        const pct = p.oldPrice>p.price ? Math.round((p.oldPrice-p.price)/p.oldPrice*100) : 0;
+        const st = starLine(p.id);
+        return `<button class="card" onclick="openProduct('${String(p.id)}')">
+          ${pct?`<span class="pct">-${pct}%</span>`:""}
+          ${imgs[0]?`<img class="img" src="${imgs[0]}" alt="">`:`<div class="img">🛍️</div>`}
+          <div class="body">
+            <div class="name">${p.name||""}</div>
+            <div><span class="price">${fmt(p.price)}</span>${p.oldPrice>p.price?`<span class="old">${fmt(p.oldPrice)}</span>`:""}</div>
+            ${st.html?`<div class="stars">${st.html}</div>`:""}
+            <div class="cta">अर्डर गर्नुहोस्</div>
+          </div>
+        </button>`;
+      }).join("")}
+    </div>
+    <footer>📞 ${cfg("phone")||""} • ${cfg("shopName")||""} © ${new Date().getFullYear()}</footer>
+  </div>`;
+}
+
+function descHTML(text, imgs){
+  if(!text) return "";
+  const lines = String(text).split("\n");
+  let out = "", inUl = false;
+  const closeUl = ()=>{ if(inUl){ out+="</ul>"; inUl=false; } };
+  lines.forEach(raw=>{
+    const l = raw.trim();
+    const ph = l.match(/^\[(?:फोटो|photo)\s*(\d+)\]$/i);
+    if(ph){ closeUl(); const src=(imgs||[])[Number(ph[1])-1]; if(src) out+=`<img src="${src}" alt="">`; return; }
+    if(l.startsWith("- ")){ if(!inUl){ out+="<ul>"; inUl=true; } out+=`<li>${l.slice(2)}</li>`; return; }
+    closeUl();
+    if(!l) return;
+    if(l.startsWith("## ")) out+=`<h3>${l.slice(3)}</h3>`;
+    else if(l.startsWith("# ")) out+=`<h2>${l.slice(2)}</h2>`;
+    else out+=`<p>${l}</p>`;
+  });
+  closeUl();
+  return out;
+}
+
+function productHTML(){
+  const p = (DATA.products||[]).find(x=>String(x.id)===String(view.productId));
+  if(!p) return `<div class="wrap"><p style="padding:30px;text-align:center">प्रोडक्ट भेटिएन। <button class="back" onclick="goHome()">← पछाडि</button></p></div>`;
+  const imgs = String(p.images||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const descImgs = String(p.descImages||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const c = calc(p);
+  const pct = p.oldPrice>p.price ? Math.round((p.oldPrice-p.price)/p.oldPrice*100) : 0;
+  const st = starLine(p.id);
+
+  return `<div class="pp">
+    <button class="back" onclick="goHome()">← पछाडि</button>
+    ${imgs[0]?`<img class="gal-main" id="galMain" src="${imgs[0]}" alt="">`:`<div class="gal-main">🛍️</div>`}
+    ${imgs.length>1?`<div class="thumbs">${imgs.map((s,i)=>`<img src="${s}" class="${i===0?'on':''}" onclick="swapImg(this,'${s}')">`).join("")}</div>`:""}
+    <h1>${p.name||""}</h1>
+    <div style="margin-top:6px"><span class="price">${fmt(p.price)}</span>${p.oldPrice>p.price?`<span class="old">${fmt(p.oldPrice)}</span>`:""} ${pct?`<span style="background:#FDECEA;color:var(--red);font-size:11px;font-weight:800;border-radius:99px;padding:2px 8px;margin-left:6px">${pct}% छुट</span>`:""}</div>
+    ${st.html?`<div class="stars">${"★".repeat(Math.round(st.avg))}${"☆".repeat(5-Math.round(st.avg))} ${st.avg.toFixed(1)} (${st.n} रिभ्यू)</div>`:""}
+
+    <div class="qty">
+      <div class="box">
+        <button onclick="chQty(-1)">−</button><b id="qtyV">${sel.qty}</b><button onclick="chQty(1)">＋</button>
+      </div>
+      <span style="color:#888;font-size:13px">संख्या</span>
+    </div>
+    <button class="ordernow" onclick="openForm()">🛍 Order Now — Cash on Delivery</button>
+
+    <div class="desc">${descHTML(p.description, descImgs)}</div>
+
+    ${st.n?`<div style="margin-top:26px">
+      <div style="font-weight:800;font-size:17px">⭐ ग्राहकका रिभ्यूहरू</div>
+      <div style="color:#888;font-size:13px;margin:2px 0 10px">${st.avg.toFixed(1)} ★ • ${st.n} रिभ्यू</div>
+      ${st.list.map(r=>`<div class="rev">
+        ${r.photoUrl?`<img class="av" src="${r.photoUrl}" alt="">`:`<span class="av">${String(r.name||"?").trim().charAt(0)}</span>`}
+        <div><b style="font-size:13.5px">${r.name||""}</b>
+        <div class="st">${"★".repeat(Number(r.stars)||5)}${"☆".repeat(5-(Number(r.stars)||5))}</div>
+        <div style="font-size:13.5px;color:#555">${r.text||""}</div></div>
+      </div>`).join("")}
+    </div>`:""}
+
+    <div class="stickybar">
+      <div class="tot"><small>जम्मा (डेलिभरीसहित)</small><b id="stTot">${fmt(c.total)}</b></div>
+      <button onclick="openForm()">Order Now — COD</button>
+    </div>
+
+    <div id="formHolder"></div>
+  </div>`;
+}
+
+function formHTML(p){
+  const c = calc(p);
+  const imgs = String(p.images||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const th = imgs[0] ? `<img class="th" src="${imgs[0]}" alt="">` : `<span class="th" style="display:flex;align-items:center;justify-content:center;background:#F1EFE7">🛍️</span>`;
+  return `<div class="overlay" onclick="closeForm(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="head">
+        <div><div class="t">🛒 ${cfg("formTitle")||"अर्डर गर्न तलको फारम भर्नुहोस् 👇"}</div>
+        <div class="s">Sign-up चाहिँदैन • Cash on Delivery</div></div>
+        <button class="x" onclick="closeForm()">✕</button>
+      </div>
+
+      ${c.offers.length>1 ? c.offers.map((o,i)=>`
+        <button class="offer ${i===Math.min(sel.offerIdx,c.offers.length-1)?'on':''}" onclick="pickOffer(${i})">
+          <span class="chk">✓</span>
+          ${o.topLabel?`<span class="lbl">${o.topLabel}</span>`:""}
+          ${th}
+          <span><span class="tt">${o.title}</span><br><span class="tag" style="background:${o.tagColor}">${o.tag}</span></span>
+          <span class="pr">${o.base>o.price?`<span class="old">${fmt(o.base)}</span>`:""}<b>${fmt(o.price)}</b></span>
+        </button>`).join("") : ""}
+
+      <div class="fld"><label>पूरा नाम <b>*</b></label><input id="fName" placeholder="जस्तै: सिता श्रेष्ठ"></div>
+      <div class="fld"><label>फोन नम्बर <b>*</b></label><input id="fPhone" type="tel" placeholder="98XXXXXXXX"></div>
+      <div class="fld"><label>शहर / जिल्ला</label><input id="fCity" placeholder="काठमाडौं"></div>
+      <div class="fld"><label>पूरा ठेगाना <b>*</b></label><input id="fAddr" placeholder="टोल, घर नं., ल्यान्डमार्क"></div>
+      <div class="fld"><label>नोट (ऐच्छिक)</label><input id="fNote" placeholder="केही भन्नु छ?"></div>
+
+      ${(DATA.shipping||[]).length?`<div style="font-weight:800;font-size:13px;margin-top:14px">🚚 Shipping Options</div>
+        ${DATA.shipping.map((s,i)=>`
+        <button class="ship ${i===Math.min(sel.shipIdx,DATA.shipping.length-1)?'on':''}" onclick="pickShip(${i})">
+          <span class="dot"></span>
+          <span><span class="l">${s.label}</span>${s.note?`<br><span class="n">${s.note}</span>`:""}</span>
+          <span class="c">${Number(s.charge)===0?"Free":fmt(s.charge)}</span>
+        </button>`).join("")}`:""}
+
+      <div class="sum">
+        <div class="r"><span>Subtotal</span><span id="sSub">${fmt(c.base)}</span></div>
+        <div class="r"><span>Shipping</span><span id="sShip">${c.delivery===0?"नि:शुल्क 🎉":fmt(c.delivery)}</span></div>
+        <div class="r tot"><span>Total (COD)</span><span id="sTot">${fmt(c.total)}</span></div>
+      </div>
+
+      <div class="err" id="fErr"></div>
+      <button class="submit" id="subBtn" onclick="submitOrder()">✅ अर्डर पक्का गर्नुहोस् — ${fmt(c.total)}</button>
+      <div class="codnote">सामान आएपछि मात्र पैसा तिर्नुहोस् (Cash on Delivery)</div>
+    </div>
+  </div>`;
+}
+
+function successHTML(){
+  const o = window._lastOrder||{};
+  return `<div class="wrap"><div class="success">
+    <div class="e">🎉</div>
+    <h2>अर्डर प्राप्त भयो!</h2>
+    <p>अर्डर नं. <b>${o.orderId||""}</b></p>
+    <p>${o.product||""} — ${o.offer||""}${o.qty>1?" × "+o.qty:""}</p>
+    <p>जम्मा (COD): <b>${fmt(o.total)}</b></p>
+    <p>हामी चाँडै <b>${o.phone||""}</b> मा सम्पर्क गर्नेछौं। धन्यवाद! 🙏</p>
+    <p style="margin-top:16px"><button class="ordernow" style="max-width:260px" onclick="goHome()">अरू किनमेल गर्नुहोस्</button></p>
+  </div></div>`;
+}
+
+/* ---------- घटनाहरू ---------- */
+function openProduct(id){
+  view = { page:"product", productId:id };
+  const p = (DATA.products||[]).find(x=>String(x.id)===String(id));
+  const offers = p?productOffers(p):[];
+  sel = { offerIdx: Math.max(0, offers.findIndex(o=>o.preselect)), shipIdx:0, qty:1, showForm:false };
+  if(p) track("ViewContent",{content_name:p.name, value:Number(p.price)||0, currency:"NPR"});
+  render();
+}
+function goHome(){ view={page:"home",productId:null}; render(); }
+function swapImg(elm, src){ el("galMain").src=src; document.querySelectorAll(".thumbs img").forEach(t=>t.classList.remove("on")); elm.classList.add("on"); }
+function chQty(d){ sel.qty=Math.max(1, sel.qty+d); const p=curP(); el("qtyV").textContent=sel.qty; el("stTot").textContent=fmt(calc(p).total); }
+function curP(){ return (DATA.products||[]).find(x=>String(x.id)===String(view.productId)); }
+function openForm(){
+  const p=curP(); if(!p) return;
+  track("AddToCart",{value:calc(p).base, currency:"NPR", content_name:p.name});
+  el("formHolder").innerHTML = formHTML(p);
+}
+function closeForm(e){ if(e && e.target!==e.currentTarget) return; el("formHolder").innerHTML=""; }
+function refreshSums(){
+  const p=curP(); const c=calc(p);
+  el("sSub").textContent=fmt(c.base);
+  el("sShip").textContent=c.delivery===0?"नि:शुल्क 🎉":fmt(c.delivery);
+  el("sTot").textContent=fmt(c.total);
+  el("subBtn").textContent=`✅ अर्डर पक्का गर्नुहोस् — ${fmt(c.total)}`;
+  el("stTot").textContent=fmt(c.total);
+}
+function pickOffer(i){
+  sel.offerIdx=i;
+  document.querySelectorAll(".offer").forEach((b,j)=>b.classList.toggle("on", j===i));
+  refreshSums();
+}
+function pickShip(i){
+  sel.shipIdx=i;
+  document.querySelectorAll(".ship").forEach((b,j)=>b.classList.toggle("on", j===i));
+  refreshSums();
+}
+async function submitOrder(){
+  const p=curP(); const c=calc(p);
+  const name=el("fName").value.trim(), phone=el("fPhone").value.trim(),
+        city=el("fCity").value.trim(), addr=el("fAddr").value.trim(), note=el("fNote").value.trim();
+  const err=el("fErr");
+  if(!name || phone.length<9 || !addr){ err.textContent="कृपया नाम, सही फोन नम्बर र ठेगाना भर्नुहोस्।"; err.style.display="block"; return; }
+  err.style.display="none";
+  const btn=el("subBtn"); btn.disabled=true; btn.textContent="अर्डर पठाउँदै…";
+
+  const order = {
+    orderId:"ORD"+Date.now().toString().slice(-8),
+    product:p.name, offer:c.o.title, qty:c.o.qty*sel.qty,
+    price:c.base, shipping:c.shipLabel, delivery:c.delivery, total:c.total,
+    name, phone, city, address:addr, note,
+  };
+  try {
+    await fetch(API_URL, { method:"POST", headers:{"Content-Type":"text/plain"}, body: JSON.stringify(order) });
+  } catch(e){ console.error(e); }
+  track("Purchase",{value:order.total, currency:"NPR", content_name:p.name});
+  window._lastOrder = order;
+  view={page:"success"};
+  render();
+}
+
+load();
+</script>
+</body>
+</html>
